@@ -1,0 +1,74 @@
+#!/usr/bin/env sh
+
+# Setup.
+VERSION="0.0.1"
+
+version() {
+	printf "git-paillao version %s\n" "$VERSION"
+
+	git --version
+}
+
+paillao() {
+	# check if the first argument was passed
+	if [ -z "$1" ]; then
+		printf "No realease number was passed!\n"; exit 0;
+	fi
+	# check if the develop branch exist, important to make de future merge
+	checkdevelop=`git show-ref refs/heads/develop`
+	if [ -n "$checkdevelop" ]; then
+	  	printf "branch develop check\n"
+	else
+		printf "branch develop does not exist creating it for you\n"
+		git checkout -b develop master
+	fi
+
+	new_branch="release/$1"
+	# check if exist a local branch with the target name
+	checkreleaselocaly=`git show-ref refs/heads/${new_branch}`
+	if [ -n "$checkreleaselocaly" ]; then
+		printf "branch $new_branch already exist locally, sorry choose another realease number!\n"; exit 0;
+	fi
+
+	# check if exist a remote branch with the target name
+	if [ `git branch -a | egrep "remotes/origin/${new_branch}"` ]; then
+		printf "branch $new_branch already exist remotely, sorry choose another realease number!\n"; exit 0;
+	fi
+
+	printf "all good, here we go -->\n"
+	# create de release branch from master
+	git checkout -b "$new_branch" master
+	printf "branch $new_branch created\n"
+	# merge develop into the release branch
+	git merge --no-ff develop
+	printf "merged with develop\n"
+	# push it to origin
+	git push -u origin "$new_branch"
+	printf "released for CI/CD\n"
+	# get back to develop
+	git checkout develop
+	printf "back to develop\n"
+}
+
+display_help() {
+	cat <<-EOF
+	  usage:
+	    git paillao [options] [COMMAND] [args]
+	  commands:
+	    git paillao                        perform a release, create a branch from master with the name 
+	    								   passed, merge it with the develop branch and push it to the repo.
+	    git paillao <release_number>       Execute git paillao with <realease_number>.
+	  options:
+	    -V, --version                   Output current version of git-paillao
+	    -h, --help                      Display this help information
+	EOF
+		exit 0
+	}
+
+
+case $1 in
+	-V|--version) version; exit 0 ;;
+	-h|--help) display_help; exit 0 ;;
+esac
+
+paillao "$@"
