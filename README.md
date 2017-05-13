@@ -17,7 +17,7 @@ Make a release easily and avoid to get fired, inspired by a true story.
 
 `git-paillao v0.0.1` will generate a branch call `release/v0.0.1`.
 
-## Installation
+## Installation (not necessary if you install the npm package)
 
 - clone the repository or just copy the files.
 - make a link in your $PATH aiming the script.
