@@ -1,0 +1,26 @@
+{
+  "name": "git-paillao",
+  "version": "0.0.2",
+  "description": "make a release automate and safe",
+  "bin": {
+    "git-paillao": "git-paillao"
+  },
+  "main" : "./git-paillao",
+  "preferGlobal": "true",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aarturo/git-paillao.git"
+  },
+  "keywords": [
+    "git",
+    "release",
+    "git",
+    "flow"
+  ],
+  "author": "Arturo Castillo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aarturo/git-paillao/issues"
+  },
+  "homepage": "https://github.com/Aarturo/git-paillao#readme"
+}
